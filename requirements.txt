@@ -1,0 +1,11 @@
+tqdm
+scipy
+wandb
+loguru
+visualdl
+prettytable
+Levenshtein
+opencv-python # libgl1-mesa-glx
+paddlepaddle-gpu
+fonttools
+oss2

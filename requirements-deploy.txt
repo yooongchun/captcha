@@ -1,0 +1,6 @@
+ppqi
+loguru
+uvicorn
+fastapi
+python-multipart
+paddlepaddle

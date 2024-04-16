@@ -1,0 +1,4 @@
+requests
+click
+pyside6
+matplotlib
