@@ -14,8 +14,7 @@ import numpy as np
 from fontTools.ttLib import TTFont
 from PIL import Image, ImageDraw, ImageFont
 from scipy.interpolate import make_interp_spline
-
-assets_dir = pathlib.Path(__file__).absolute().parent.parent.parent / "assets"
+from src import assets_path
 
 
 class FontUtil:
@@ -45,9 +44,9 @@ class CaptchaGenerator:
     simple_mode: 是否简单模式，简单模式下只包含数字和字母
     """
 
-    def __init__(self, font_path=str(assets_dir / "font/3D-1.ttf"),
-                 font2_path=str(assets_dir / "font/SanJiJinSongJianTi-Xi-2.ttf"),
-                 vocabulary_path=str(assets_dir / "vocabulary.txt"),
+    def __init__(self, font_path=str(assets_path / "font/3D-1.ttf"),
+                 font2_path=str(assets_path / "font/SanJiJinSongJianTi-Xi-2.ttf"),
+                 vocabulary_path=str(assets_path / "vocabulary.txt"),
                  width=120, height=50, max_words=6, simple_mode=False):
         self.scale = 5
         self.width = width * self.scale
@@ -109,7 +108,7 @@ class CaptchaGenerator:
         # 创建两条平行的样条曲线
         xs = np.linspace(0, self.width, num=500)
         y1 = 75 * np.sin(
-            1.2 * np.pi * xs / self.width + 2 * np.random.uniform(-np.pi, np.pi)
+                1.2 * np.pi * xs / self.width + 2 * np.random.uniform(-np.pi, np.pi)
         )
         y2 = y1 + self.height  # 修改这里使曲线更宽
 
@@ -122,9 +121,9 @@ class CaptchaGenerator:
 
         # 将两条曲线之间的区域填充颜色，设置颜色为淡绿色
         points = list(
-            zip(
-                np.concatenate([xnew, xnew[::-1]]), np.concatenate([y1new, y2new[::-1]])
-            )
+                zip(
+                        np.concatenate([xnew, xnew[::-1]]), np.concatenate([y1new, y2new[::-1]])
+                )
         )
         draw.polygon(points, fill=bg_colors[0])
         # 添加带颜色的噪点
@@ -133,9 +132,9 @@ class CaptchaGenerator:
             x = random.randint(0, self.width)
             y = random.randint(0, self.height)
             color = (
-                random.randint(0, 255),
-                random.randint(0, 255),
-                random.randint(0, 255),
+                    random.randint(0, 255),
+                    random.randint(0, 255),
+                    random.randint(0, 255),
             )  # 随机颜色
             draw.ellipse((x - r, y - r, x + r, y + r), fill=color)
 
@@ -192,10 +191,10 @@ class CaptchaGenerator:
         """
 
         colors = {
-            (0, 0, 0): "black",
-            (255, 0, 0): "red",
-            (0, 0, 255): "blue",
-            (255, 255, 0): "yellow",
+                (0, 0, 0): "black",
+                (255, 0, 0): "red",
+                (0, 0, 255): "blue",
+                (255, 255, 0): "yellow",
         }  # 随机颜色
         # 生成label
         label = self._gen_label(ratio=ratio, num=num)
@@ -302,10 +301,10 @@ def main():
         tbar.set_description(f"batch={i + 1}")
 
         save_batch(
-            batch_data,
-            args.output,
-            test_ratio=args.test_ratio,
-            index=batch_size * i,
+                batch_data,
+                args.output,
+                test_ratio=args.test_ratio,
+                index=batch_size * i,
         )
 
 

@@ -8,7 +8,7 @@ import paddle
 import Levenshtein as Lev
 from paddle.metric import Metric
 
-import decoder
+from src.helper import decoder
 
 
 class WordsErrorRate(Metric):

@@ -23,7 +23,7 @@ from PySide6.QtCore import QSize, Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-root_dir = pathlib.Path(__file__).parent.parent.parent
+from src import dataset_path
 
 
 def get_predict_label(img_path: str):
@@ -453,7 +453,7 @@ class TagWindow(QWidget):
             return selected_item
         else:
             raise ValueError(
-                f"unknown channel: {channel}, {len(yellow_items)}, {len(blue_items)}, {len(black_items)}, {len(red_items)}")
+                    f"unknown channel: {channel}, {len(yellow_items)}, {len(blue_items)}, {len(black_items)}, {len(red_items)}")
 
     def process_multi_tag(self):
         self.multi_tag = True
@@ -496,7 +496,7 @@ class TagWindow(QWidget):
                     tag_filename = self.save_image(filename, tag, i)
                     self.processed_list.addItem(tag_filename)
                 self.processed_label.setText(
-                    f"Processed:{self.processed_list.count()}(Total{self.processed_list.count() + self.processed_num})")
+                        f"Processed:{self.processed_list.count()}(Total{self.processed_list.count() + self.processed_num})")
                 self.progress_bar.setValue(i)
                 self.update_figure()  # update the color ratio figure
                 # remove the file from the origin folder
@@ -542,8 +542,8 @@ dark_stylesheet = """
 @click.option("--enable-pred", is_flag=True)
 @click.option("--multi-tag", is_flag=True)
 def main(dataset_dir, output_dir, test_ratio, enable_pred, multi_tag):
-    dataset_dir = root_dir / "dataset" / dataset_dir
-    save_dir = root_dir / "dataset" / output_dir / "images"
+    dataset_dir = dataset_path / dataset_dir
+    save_dir = dataset_path / output_dir / "images"
     os.makedirs(save_dir, exist_ok=True)
 
     app = QApplication()

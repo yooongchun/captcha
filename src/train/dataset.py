@@ -9,10 +9,9 @@ from PIL import Image
 from paddle.io import Dataset
 from loguru import logger
 
-from util import DataUtil
-from helper import CaptchaGenerator
-
-assets_dir = pathlib.Path(__file__).absolute().parent.parent / "assets"
+from src import assets_path
+from src.helper.util import DataUtil
+from src.helper.generate_captcha import CaptchaGenerator
 
 
 def _load_meta_info(dataset_dir: str, mode: str):
@@ -38,10 +37,10 @@ class CaptchaDataset(Dataset):
 
     def __init__(
             self,
-            vocabulary_path: Optional[str] = str(assets_dir / "vocabulary.txt"),
+            vocabulary_path: Optional[str] = str(assets_path / "vocabulary.txt"),
             auto_gen: bool = False,
             auto_num: int = 100_000,
-            dataset_dir: Union[str | List[str]] = None,
+            dataset_dir: List[str] = None,
             mode: str = "train",
             channel: str = "text",
             max_len: int = 6,
@@ -75,17 +74,6 @@ class CaptchaDataset(Dataset):
             # 过滤掉颜色不存在的文件
             if channel not in ["text", "random"]:
                 self.meta_info = [meta for meta in self.meta_info if meta.get(channel)]
-            # 过滤掉词表中不存在的样本
-            # ignored_idx = set()
-            # for i, meta in enumerate(self.meta_info):
-            #     for key in ["blue", "red", "yellow", "black", "text"]:
-            #         if key in meta:
-            #             for char in meta[key]:
-            #                 if char not in self.vocabulary:
-            #                     ignored_idx.add(i)
-            #                     logger.warning(f"ignore file {meta['path']} because {char} not in vocabulary")
-            #                     break
-            # self.meta_info = [meta for i, meta in enumerate(self.meta_info) if i not in ignored_idx]
             logger.info(f"load {len(self.meta_info)} samples from {dataset_dir}")
 
     def _data_from(self, idx):

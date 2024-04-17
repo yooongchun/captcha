@@ -12,7 +12,7 @@
 cd captcha/train/helper
 
 pip3 install -r requirements.txt
-python3 captcha_generator.py --num 100_000 --output ../../dataset
+python3 generate_captcha.py --num 100_000 --output ../../dataset
 ```
 
 - 也可以使用已经生成好的，在这里下载：https://aistudio.baidu.com/datasetdetail/251503/0

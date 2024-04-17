@@ -9,10 +9,7 @@ import paddle
 import prettytable
 from loguru import logger
 
-import model
-import dataset
-import metric
-import loss
+from src.train import model, dataset, metric, loss
 
 
 class PrintLastLROnEpochStart(paddle.callbacks.Callback):
@@ -58,12 +55,12 @@ class Trainer:
             assert self.args.dataset_dir is not None, "dataset_dir must be set when evaluate"
             logger.info(f"Start evaluate for dataset {self.args.dataset_dir}...")
             self.test_dataset = dataset.CaptchaDataset(
-                vocabulary_path=self.args.vocabulary_path,
-                dataset_dir=self.args.dataset_dir.split(","),
-                mode="test",
-                channel=self.args.channel,
-                max_len=self.args.max_len,
-                simple_mode=self.args.simple_mode
+                    vocabulary_path=self.args.vocabulary_path,
+                    dataset_dir=self.args.dataset_dir.split(","),
+                    mode="test",
+                    channel=self.args.channel,
+                    max_len=self.args.max_len,
+                    simple_mode=self.args.simple_mode
             )
             self.test_dataloader = paddle.io.DataLoader(self.test_dataset, batch_size=self.args.batch_size,
                                                         shuffle=True,
@@ -71,14 +68,14 @@ class Trainer:
         else:  # 获取训练数据
             auto_gen = self.args.dataset_dir is None
             self.train_dataset = dataset.CaptchaDataset(
-                vocabulary_path=self.args.vocabulary_path,
-                dataset_dir=self.args.dataset_dir.split(",") if self.args.dataset_dir else None,
-                auto_gen=auto_gen,
-                auto_num=self.args.auto_num,
-                mode="train",
-                channel=self.args.channel,
-                max_len=self.args.max_len,
-                simple_mode=self.args.simple_mode
+                    vocabulary_path=self.args.vocabulary_path,
+                    dataset_dir=self.args.dataset_dir.split(",") if self.args.dataset_dir else None,
+                    auto_gen=auto_gen,
+                    auto_num=self.args.auto_num,
+                    mode="train",
+                    channel=self.args.channel,
+                    max_len=self.args.max_len,
+                    simple_mode=self.args.simple_mode
             )
             self.train_dataloader = paddle.io.DataLoader(self.train_dataset, batch_size=self.args.batch_size,
                                                          shuffle=True,
@@ -86,14 +83,14 @@ class Trainer:
 
             # 获取测试数据
             self.test_dataset = dataset.CaptchaDataset(
-                vocabulary_path=self.args.vocabulary_path,
-                dataset_dir=self.args.dataset_dir.split(",") if self.args.dataset_dir else None,
-                auto_gen=auto_gen,
-                auto_num=min(self.args.auto_num // 2, 100_000),  # 自动生成时测试集数量为训练集的一半，同时限制不超过10w
-                mode="test",
-                channel=self.args.channel,
-                max_len=self.args.max_len,
-                simple_mode=self.args.simple_mode
+                    vocabulary_path=self.args.vocabulary_path,
+                    dataset_dir=self.args.dataset_dir.split(",") if self.args.dataset_dir else None,
+                    auto_gen=auto_gen,
+                    auto_num=min(self.args.auto_num // 2, 100_000),  # 自动生成时测试集数量为训练集的一半，同时限制不超过10w
+                    mode="test",
+                    channel=self.args.channel,
+                    max_len=self.args.max_len,
+                    simple_mode=self.args.simple_mode
             )
             self.test_dataloader = paddle.io.DataLoader(self.test_dataset, batch_size=self.args.batch_size,
                                                         shuffle=False,
@@ -129,16 +126,16 @@ class Trainer:
             warmup_steps = 4
             values = [self.args.lr * (0.1 ** i) for i in range(len(boundaries) + 1)]
             learning_rate = paddle.optimizer.lr.PiecewiseDecay(
-                boundaries=boundaries, values=values)
+                    boundaries=boundaries, values=values)
             learning_rate = paddle.optimizer.lr.LinearWarmup(
-                learning_rate=learning_rate,
-                warmup_steps=warmup_steps,
-                start_lr=self.args.lr / 5.,
-                end_lr=self.args.lr,
-                verbose=False)
+                    learning_rate=learning_rate,
+                    warmup_steps=warmup_steps,
+                    start_lr=self.args.lr / 5.,
+                    end_lr=self.args.lr,
+                    verbose=False)
             optimizer = paddle.optimizer.Adam(
-                learning_rate=learning_rate,
-                parameters=parameters)
+                    learning_rate=learning_rate,
+                    parameters=parameters)
             return optimizer
 
         self.optimizer = make_optimizer(self.model.parameters())

@@ -5,4 +5,5 @@ loguru
 pyside6
 matplotlib
 pyppeteer
+pandas
 python-dotenv

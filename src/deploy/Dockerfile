@@ -21,7 +21,7 @@ RUN python -m pip install --no-cache-dir --upgrade -r requirements.txt -i https:
    && rm -rf ~/.cache/*
 
 COPY ../train src
-COPY ../assets/vocabulary.txt assets/
+COPY ../../assets/vocabulary.txt assets/
 COPY output/checkpoint/inference inference
 RUN chown -R $USER:$USER /home
 

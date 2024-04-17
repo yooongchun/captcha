@@ -10,9 +10,8 @@ import pathlib
 import click
 from loguru import logger
 
-from . import oss_util
-
-proj_dir = pathlib.Path(__file__).absolute().parent.parent
+from src import dataset_path
+from src.helper import oss_util
 
 
 def get_next_version(file_vers: list) -> int:
@@ -42,7 +41,7 @@ def upload_to_oss(local_path: str):
 def download_from_oss(key: str, save_dir: str):
     """Download the file from oss"""
     if not save_dir:
-        save_dir = proj_dir / "dataset"
+        save_dir = dataset_path
     if not key:
         oss = oss_util.OSSUtil()
         files_vers = oss.list()
