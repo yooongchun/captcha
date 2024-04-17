@@ -10,7 +10,7 @@ from paddle.io import Dataset
 from loguru import logger
 
 from util import DataUtil
-from preprocess.captcha_generator import CaptchaGenerator
+from helper import CaptchaGenerator
 
 assets_dir = pathlib.Path(__file__).absolute().parent.parent / "assets"
 

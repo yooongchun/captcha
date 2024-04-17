@@ -9,7 +9,7 @@
 - 可以自己生成
 
 ```bash
-cd captcha/src/preprocess
+cd captcha/train/helper
 
 pip3 install -r requirements.txt
 python3 captcha_generator.py --num 100_000 --output ../../dataset
@@ -20,7 +20,7 @@ python3 captcha_generator.py --num 100_000 --output ../../dataset
 ### 2. 训练
 
 ```bash
-cd captcha/src
+cd captcha/train
 
 pip3 install -r requirements.txt
 bash train.sh

@@ -6,6 +6,5 @@ visualdl
 prettytable
 Levenshtein
 opencv-python # libgl1-mesa-glx
-paddlepaddle-gpu
+paddlepaddle
 fonttools
-oss2

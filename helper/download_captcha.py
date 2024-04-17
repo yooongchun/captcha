@@ -93,13 +93,13 @@ class BrowserHandle:
         prev_str = hashlib.md5(prev_str.encode("utf-8")).hexdigest()
         cnt = 0
         ele_yzm = await self.page.waitForXPath('//*[@id="yzm_img"]')
-        yzm_base64_str = await (await ele_yzm.getProperty("src")).jsonValue()
+        yzm_base64_str = await (await ele_yzm.getProperty("train")).jsonValue()
         curr_str = hashlib.md5(yzm_base64_str.encode("utf-8")).hexdigest()
         while cnt < max_wait_time and curr_str == prev_str:
             time.sleep(1)
             logger.warning(f"[{cnt}/{max_wait_time}]s wait verify image...")
             ele_yzm = await self.page.waitForXPath('//*[@id="yzm_img"]')
-            yzm_base64_str = await (await ele_yzm.getProperty("src")).jsonValue()
+            yzm_base64_str = await (await ele_yzm.getProperty("train")).jsonValue()
             prev_str = curr_str
             curr_str = hashlib.md5(yzm_base64_str.encode("utf-8")).hexdigest()
             cnt += 1

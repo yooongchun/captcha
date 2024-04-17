@@ -1,0 +1,8 @@
+oss2
+requests
+click
+loguru
+pyside6
+matplotlib
+pyppeteer
+python-dotenv
