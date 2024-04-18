@@ -37,7 +37,7 @@ class BrowserHandle:
 
     def fill_basement(self, inv_code, inv_num, inv_date, inv_chk):
         return self._call_async_func(
-                self._fill_basement, inv_code, inv_num, inv_date, inv_chk
+            self._fill_basement, inv_code, inv_num, inv_date, inv_chk
         )
 
     def get_verify_code(self, max_wait_time=15):
@@ -48,24 +48,24 @@ class BrowserHandle:
 
     async def _init(self):
         self.browser = await launch(
-                headless=(not self.debug),
-                ignoreHTTPSErrors=True,
-                defaultViewport=None,
-                executablePath=self.browser_path,
-                viewport={"width": 1920, "height": 1080},
-                args=[
-                        "--disable-infobars",
-                        "--start-maximized",
-                        "--disable-dev-shm-usage",
-                        "--no-sandbox",
-                        "--disable-gpu",
-                        "--disable-extensions",
-                        "--disable-blink-features=AutomationControlled",
-                ],
+            headless=(not self.debug),
+            ignoreHTTPSErrors=True,
+            defaultViewport=None,
+            executablePath=self.browser_path,
+            viewport={"width": 1920, "height": 1080},
+            args=[
+                "--disable-infobars",
+                "--start-maximized",
+                "--disable-dev-shm-usage",
+                "--no-sandbox",
+                "--disable-gpu",
+                "--disable-extensions",
+                "--disable-blink-features=AutomationControlled",
+            ],
         )
         self.page = await self.browser.newPage()
         await self.page.evaluate(
-                """() =>{ Object.defineProperties(navigator,{ webdriver:{ get: () => false } }) }"""
+            """() =>{ Object.defineProperties(navigator,{ webdriver:{ get: () => false } }) }"""
         )
         await self.page.goto(self.url)
 
@@ -153,13 +153,13 @@ def task(inv_data: pd.DataFrame, save_dir, num, debug=False, browser_path=None):
     while cnt < num:
         row_data = inv_data.sample(n=1).iloc[0]
         brow.fill_basement(
-                row_data.InvCode, row_data.InvNum, row_data.InvDate, row_data.InvCheckCode
+            row_data.InvCode, row_data.InvNum, row_data.InvDate, row_data.InvCheckCode
         )
         while cnt < num:
             cnt += 1
             logger.info(
-                    f"[{cnt}/{num}] InvCode:{row_data.InvCode}, InvNum:{row_data.InvNum}, "
-                    f"InvDate:{row_data.InvDate}, InvCheckCode:{row_data.InvCheckCode}"
+                f"[{cnt}/{num}] InvCode:{row_data.InvCode}, InvNum:{row_data.InvNum}, "
+                f"InvDate:{row_data.InvDate}, InvCheckCode:{row_data.InvCheckCode}"
             )
             try:
                 base64_img, tip = brow.get_verify_code()
@@ -167,20 +167,3 @@ def task(inv_data: pd.DataFrame, save_dir, num, debug=False, browser_path=None):
             except Exception as e:
                 logger.error(f"error:{e}")
                 break
-
-
-@click.command()
-@click.option("-s", "--save_path", help="output directory")
-@click.option("-n", "--num", default=10000, help="how many captcha images to download")
-@click.option("-d", "--debug", is_flag=True, help="debug mode")
-@click.option("-b", "--browser_path", help="chrome browser path")
-def main(save_path: str, num: int, debug: bool, browser_path: str):
-    inv_data = pd.read_csv(str(assets_path / "inv_data.csv"), encoding="utf-8", dtype=str)
-    inv_data = inv_data.reset_index(drop=True)
-    if not save_path:
-        save_path = str(dataset_path / "origin")
-    task(inv_data, save_path, num, debug=debug, browser_path=browser_path)
-
-
-if __name__ == "__main__":
-    main()
