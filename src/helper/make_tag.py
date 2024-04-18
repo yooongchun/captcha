@@ -348,11 +348,12 @@ class TagWindow(QWidget):
 
         v2 = QVBoxLayout()
 
-        v2.addStretch(1)
+        v2.addStretch(2)
         v2.addWidget(self.single_tag)
-        v2.addWidget(self.multi_tag_btn)
-        v2.addWidget(quit_button)
         v2.addStretch(1)
+        v2.addWidget(self.multi_tag_btn)
+        v2.addStretch(1)
+        v2.addWidget(quit_button)
         layout.addLayout(v2)
 
         v3 = QVBoxLayout()
