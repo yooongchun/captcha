@@ -1,6 +1,5 @@
 #! -*- coding: utf-8 -*-
 
-import sys
 import json
 import argparse
 import pathlib
@@ -9,6 +8,7 @@ import paddle
 import prettytable
 from loguru import logger
 
+from src import proj_path
 from src.train import model, dataset, metric, loss
 
 
@@ -45,7 +45,6 @@ def check_dataset(dataset_dir: str):
 class Trainer:
     def __init__(self, args: argparse.Namespace):
         self.args = args
-
         self._init_data()
         self._init_model()
 
@@ -183,46 +182,3 @@ class Trainer:
     def evaluate(self):
         res = self.model.evaluate(self.test_dataloader, batch_size=self.args.batch_size, verbose=1)
         logger.info(res)
-
-
-def parse_args():
-    proj_dir = pathlib.Path(__file__).absolute().parent.parent
-
-    parser = argparse.ArgumentParser()
-    # 初始化参数
-    parser.add_argument("--dataset_dir", type=str, default=None)
-    parser.add_argument("--vocabulary_path", type=str, default=str(proj_dir / "assets/vocabulary.txt"))
-    parser.add_argument("--save_dir", type=str, default=str(proj_dir / "output/checkpoint"))
-    parser.add_argument("--log_dir", type=str, default=str(proj_dir / "output/log"))
-    parser.add_argument("--wandb_name", type=str, default="")
-    parser.add_argument("--wandb_mode", type=str, default="")
-    parser.add_argument("--auto_num", type=int, default=10000)
-    parser.add_argument("--pretrained", type=str, default=None)
-    parser.add_argument("--eval_freq", type=int, default=2)
-    parser.add_argument("--save_freq", type=int, default=1)
-    parser.add_argument("--max_len", type=int, default=6, help="生成的验证码最大长度")
-    # 模型参数
-    parser.add_argument("--channel", type=str, default="text")
-    parser.add_argument("--simple_mode", action="store_true")
-    parser.add_argument("--model", type=str, default="custom")
-    # 训练参数
-    parser.add_argument("--batch_size", type=int, default=32)
-    parser.add_argument("--num_epoch", type=int, default=100)
-    parser.add_argument("--lr", type=float, default=0.001)
-    parser.add_argument("--num_workers", type=int, default=0)
-    # 导出模型
-    parser.add_argument("--export", action="store_true")
-    # 评估模型
-    parser.add_argument("--evaluate", action="store_true")
-    return parser.parse_args(sys.argv[1:])
-
-
-if __name__ == "__main__":
-    arg = parse_args()
-    trainer = Trainer(arg)
-    if arg.export:
-        trainer.export()
-    elif arg.evaluate:
-        trainer.evaluate()
-    else:
-        trainer.train()

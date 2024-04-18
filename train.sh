@@ -4,13 +4,13 @@ PROJ_DIR=$(dirname $(dirname $(readlink -f "$0")))
 
 # 指定训练参数
 # 默认情况下可以不指定数据集路径，采用自动生成策略
-DATASET_DIR=C:/Users/zoz-c/Documents/Projects/captcha/dataset/labeled
+DATASET_DIR=dataset/labeled
 # 自动生成时数据集大小（实际上每个epoch生成的数据集都是不同的）
-AUTO_NUM=
+AUTO_NUM=1000000
 # 可以指定预训练模型来实现增量训练
 PRETRAINED=
 # 评测评率和保存频率
-EVAL_FREQ=1
+EVAL_FREQ=5
 SAVE_FREQ=1
 # 生成的验证码最大长度
 MAX_LEN=6
@@ -58,7 +58,7 @@ if [[ ${#GPUS} -gt 1 ]]; then
     DISTRIBUTED_LAUNCH="-m paddle.distributed.launch"
 fi
 # 运行train.py文件
-CUDA_VISIBLE_DEVICES=$GPUS python $DISTRIBUTED_LAUNCH train.py \
+CUDA_VISIBLE_DEVICES=$GPUS python $DISTRIBUTED_LAUNCH -m src.train.train \
                 --auto_num $AUTO_NUM \
                 --eval_freq $EVAL_FREQ \
                 --save_freq $SAVE_FREQ \
