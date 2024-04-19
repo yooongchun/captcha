@@ -22,6 +22,7 @@ def cli():
 @click.option("-k", "--key", help="oss key")
 @click.option("-d", "--save-dir", help="save directory")
 def up(key: str, save_dir: str):
+    """upload dataset to oss"""
     from src.helper import dataset_manage
 
     dataset_manage.upload_to_oss(key, save_dir)
@@ -31,6 +32,7 @@ def up(key: str, save_dir: str):
 @click.option("-k", "--key", help="oss key")
 @click.option("-d", "--save-dir", type=Path, help="save directory")
 def dw(key: str, save_dir: Path):
+    """download dataset from oss"""
     from src.helper import dataset_manage
 
     dataset_manage.download_from_oss(key, save_dir)
@@ -61,6 +63,7 @@ def dw(key: str, save_dir: Path):
 def train(dataset: str, vocabulary: str, save_path: str, log_path: str, wandb_name: str, wandb_mode: str, auto_num: int,
           pretrained: str, eval_freq: int, save_freq: int, max_len: int, channel: str, simple_mode: bool, model: str,
           batch_size: int, num_epoch: int, lr: float, num_workers: int, export: bool, evaluate: bool):
+    """train the model"""
     from src.train import train as m_train
 
     args = argparse.Namespace(
@@ -98,18 +101,19 @@ def train(dataset: str, vocabulary: str, save_path: str, log_path: str, wandb_na
 @click.option("--host", default="0.0.0.0", type=str, help="host")
 @click.option("--port", default=8000, type=int, help="port")
 def app(host: str, port: int):
+    """run the app"""
     from src.app import app as m_app
 
     uvicorn.run(m_app.app, host=host, port=port)
 
 
-def main():
 @cli.command()
 @click.option("-s", "--save-dir", help="output directory")
 @click.option("-n", "--num", default=10000, help="how many captcha images to download")
 @click.option("-d", "--debug", is_flag=True, help="debug mode")
 @click.option("-b", "--browser-path", help="chrome browser path")
 def download(save_dir: str, num: int, debug: bool, browser_path: str):
+    """download captcha images"""
     from src.helper import download_captcha
 
     inv_data = pd.read_csv(str(assets_path / "inv_data.csv"), encoding="utf-8", dtype=str)
@@ -125,6 +129,7 @@ def download(save_dir: str, num: int, debug: bool, browser_path: str):
 @click.option("--test-ratio", type=float, default=0.1)
 @click.option("--enable-pred", is_flag=True)
 def tag(dataset_dir, output_dir, test_ratio, enable_pred):
+    """tag the dataset"""
     from src.helper import make_tag
 
     dataset_dir = dataset_path / dataset_dir
