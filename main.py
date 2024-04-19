@@ -127,15 +127,15 @@ def download(save_dir: str, num: int, debug: bool, browser_path: str):
 @click.option("--dataset-dir", type=str, default="origin")
 @click.option("--output-dir", type=str, default="labeled")
 @click.option("--test-ratio", type=float, default=0.1)
-@click.option("--enable-pred", is_flag=True)
-def tag(dataset_dir, output_dir, test_ratio, enable_pred):
+@click.option("--pred-host", type=str, default="")
+def tag(dataset_dir, output_dir, test_ratio, pred_host):
     """tag the dataset"""
     from src.helper import make_tag
 
     dataset_dir = dataset_path / dataset_dir
     save_dir = dataset_path / output_dir / "images"
     save_dir.mkdir(parents=True, exist_ok=True)
-    make_tag.main(dataset_dir, save_dir, test_ratio, enable_pred)
+    make_tag.main(dataset_dir, save_dir, test_ratio, pred_host)
 
 
 if __name__ == "__main__":
