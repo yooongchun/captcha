@@ -14,13 +14,13 @@ from PIL import Image
 from loguru import logger
 from fastapi import UploadFile, File, FastAPI, Request
 
-from predict import data_util, predict
+from src.app.predict import data_util, predict
 
 app = FastAPI()
 logger.add("logs/visit.log", rotation="10 MB", encoding="utf-8", enqueue=True, compression="zip", retention="100 days")
 
 
-@app.post("/captcha/predict")
+@app.post("/api/v1/captcha/predict")
 async def upload_images(request: Request, files: List[UploadFile] = File(...)):
     filenames = [file.filename for file in files]
     channels = [re.split(r"[.\-_]", filename)[0] for filename in filenames]

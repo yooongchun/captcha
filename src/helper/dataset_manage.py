@@ -71,7 +71,7 @@ def upload_to_oss(key: str, save_dir: str):
     tar_path.unlink()
 
 
-def download_from_oss(key: str, save_dir: str):
+def download_from_oss(key: str, save_dir: Path):
     """Download the file from oss"""
     if not save_dir:
         save_dir = dataset_path

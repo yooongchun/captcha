@@ -8,11 +8,13 @@ from PIL import Image
 from loguru import logger
 from ppqi import InferenceModel
 
+from src import inference_path
 from src.helper.util import DataUtil
 from src.helper.decoder import Decoder
 
+
 # 加载模型
-inference_model_path = pathlib.Path(__file__).absolute().parent.parent / "inference/model"
+inference_model_path = inference_path / "model"
 logger.info(f"Load model from {inference_model_path}...")
 model = InferenceModel(
     modelpath=str(inference_model_path),

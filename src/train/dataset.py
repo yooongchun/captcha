@@ -3,13 +3,13 @@
 import json
 import pathlib
 import random
-from typing import Optional, Union, List
+from typing import Optional, List
 
 from PIL import Image
 from paddle.io import Dataset
 from loguru import logger
 
-from src import assets_path
+from src import vocabulary_path
 from src.helper.util import DataUtil
 from src.helper.generate_captcha import CaptchaGenerator
 
@@ -37,7 +37,6 @@ class CaptchaDataset(Dataset):
 
     def __init__(
             self,
-            vocabulary_path: Optional[str] = str(assets_path / "vocabulary.txt"),
             auto_gen: bool = False,
             auto_num: int = 100_000,
             dataset_dir: List[str] = None,

@@ -11,6 +11,8 @@ import numpy as np
 from PIL import Image
 from paddle.vision.transforms import transforms
 
+from src import vocabulary_path
+
 
 class DataUtil:
     def __init__(self, vocabulary: Optional[list] = None, max_len: int = 6):
@@ -31,7 +33,7 @@ class DataUtil:
                                              ])
 
     @staticmethod
-    def _load_vocabulary(vocabulary_path: str = "../assets/vocabulary.txt"):
+    def _load_vocabulary():
         with open(vocabulary_path, encoding="utf-8") as f:
             vocabulary = f.readlines()
         vocabulary = [w.strip() for w in vocabulary if w.strip()]

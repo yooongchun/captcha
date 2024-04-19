@@ -14,7 +14,7 @@ import numpy as np
 from fontTools.ttLib import TTFont
 from PIL import Image, ImageDraw, ImageFont
 from scipy.interpolate import make_interp_spline
-from src import assets_path
+from src import assets_path, vocabulary_path
 
 
 class FontUtil:
@@ -46,7 +46,6 @@ class CaptchaGenerator:
 
     def __init__(self, font_path=str(assets_path / "font/3D-1.ttf"),
                  font2_path=str(assets_path / "font/SanJiJinSongJianTi-Xi-2.ttf"),
-                 vocabulary_path=str(assets_path / "vocabulary.txt"),
                  width=120, height=50, max_words=6, simple_mode=False):
         self.scale = 5
         self.width = width * self.scale

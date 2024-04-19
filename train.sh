@@ -1,6 +1,6 @@
 #! /bin/bash
 
-PROJ_DIR=$(dirname $(dirname $(readlink -f "$0")))
+PROJ_DIR=$(dirname $(readlink -f "$0"))
 
 # 指定训练参数
 # 默认情况下可以不指定数据集路径，采用自动生成策略
