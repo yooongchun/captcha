@@ -31,24 +31,36 @@ from PySide6.QtWidgets import (
     QProgressBar,
 )
 from PySide6.QtGui import QPixmap, QFont
-from PySide6.QtCore import QSize, Qt
+from PySide6.QtCore import QSize, Qt, QMetaObject, Q_ARG
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 
 def get_predict_label(host: str, img_path: str, channel: str):
-    assert channel in ["red", "blue", "black", "yellow"], f"channel {channel} is not supported!"
+    assert channel in [
+        "red",
+        "blue",
+        "black",
+        "yellow",
+    ], f"channel {channel} is not supported!"
 
     st = time.time()
-    res = requests.post(f"{host}/api/v1/captcha/predict", files={"file": open(img_path, "rb")},
-                        data={"channel": channel})
+    res = requests.post(
+        f"{host}/api/v1/captcha/predict",
+        files={"file": open(img_path, "rb")},
+        data={"channel": channel},
+    )
     ed = time.time()
     assert res.status_code == 200, f"request failed, status code: {res.status_code}"
-    assert res.json()["code"] == 0, f"request failed, error message: {res.json()['error']}"
+    assert (
+        res.json()["code"] == 0
+    ), f"request failed, error message: {res.json()['error']}"
 
     pred_label = res.json()["data"]["predict_label"]
-    logger.info(f"request time: {round(ed - st, 2)}s, filename: {os.path.basename(img_path)}, "
-                f"channel: {channel}, label: {pred_label}")
+    logger.info(
+        f"request time: {round(ed - st, 2)}s, filename: {os.path.basename(img_path)}, "
+        f"channel: {channel}, label: {pred_label}"
+    )
     return pred_label
 
 
@@ -117,11 +129,13 @@ class TagDialog(QDialog):
 
         self.setLayout(layout)
 
-        threading.Thread(target=self.get_auto_tag).start()
+        if self.pred_host:
+            threading.Thread(target=self.get_auto_tag).start()
 
     def reject_tag(self):
         self.reject()
 
+    #
     def skip_tag(self):
         self.done(11)
 
@@ -133,10 +147,18 @@ class TagDialog(QDialog):
         return {color: self.inputs[color].text().upper() for color in self.inputs}
 
     def get_auto_tag(self):
-        logger.info(f"start to get auto tag, filename: {os.path.basename(self.img_path)}")
+        logger.info(
+            f"start to get auto tag, filename: {os.path.basename(self.img_path)}"
+        )
         for color in self.inputs:
             pred_label = get_predict_label(self.pred_host, self.img_path, color)
-            self.inputs[color].setText(pred_label)
+            if pred_label:
+                QMetaObject.invokeMethod(
+                    self.inputs[color],
+                    "setText",
+                    Qt.QueuedConnection,
+                    Q_ARG(str, pred_label),
+                )
         logger.info(f"auto tag finished, filename: {os.path.basename(self.img_path)}")
 
     def keyPressEvent(self, event):
@@ -144,6 +166,8 @@ class TagDialog(QDialog):
         if event.key() == Qt.Key_Return:
             # if press enter, do the corresponding operation
             self.accept_tag()
+        elif event.key() == Qt.Key_Escape:
+            self.skip_tag()
 
 
 class MyLineEdit(QLineEdit):
@@ -152,7 +176,15 @@ class MyLineEdit(QLineEdit):
         self.textChanged.connect(self.on_text_changed)
 
     def on_text_changed(self, text):
-        self.setText(text.upper())
+        self.textChanged.disconnect(self.on_text_changed)
+        new_text = "".join(
+            [
+                i.upper() if i.isalpha() and not "\u4e00" <= i <= "\u9fff" else i
+                for i in text
+            ]
+        )
+        self.setText(new_text)
+        self.textChanged.connect(self.on_text_changed)
 
 
 class RenameDialog(QDialog):
@@ -172,7 +204,7 @@ class RenameDialog(QDialog):
 
         self.input = QLineEdit(os.path.basename(old_path))
         layout.addWidget(self.input)
-
+        layout.addStretch(1)
         hbox = QHBoxLayout()
         self.ok_button = QPushButton("OK")
         self.ok_button.clicked.connect(self.accept)
@@ -195,12 +227,12 @@ class RenameDialog(QDialog):
 
 class TagWindow(QWidget):
     def __init__(
-            self,
-            dataset_dir: pathlib.Path,
-            target_dir: pathlib.Path,
-            test_ratio: float = 0.4,
-            pred_host: str = "",
-            multi_tag: bool = False,
+        self,
+        dataset_dir: pathlib.Path,
+        target_dir: pathlib.Path,
+        test_ratio: float = 0.4,
+        pred_host: str = "",
+        multi_tag: bool = False,
     ):
         super().__init__()
 
@@ -216,9 +248,13 @@ class TagWindow(QWidget):
 
         self.file_paths = glob(f"{self.dataset_dir}/*.png")
         random.shuffle(self.file_paths)
-        self.filename_map = {os.path.basename(file_path): file_path for file_path in self.file_paths}
+        self.filename_map = {
+            os.path.basename(file_path): file_path for file_path in self.file_paths
+        }
 
-        processed_files = [os.path.basename(file) for file in glob(f"{self.target_dir}/*.png")]
+        processed_files = [
+            os.path.basename(file) for file in glob(f"{self.target_dir}/*.png")
+        ]
         self.processed_num = len(processed_files)
         self.total_num = len(self.file_paths) + self.processed_num
 
@@ -239,7 +275,9 @@ class TagWindow(QWidget):
         self.unprocessed_list.addItems(list(self.filename_map.keys()))
 
         self.unprocessed_label = QLabel(f"Unprocessed:{self.unprocessed_list.count()}")
-        self.processed_label = QLabel(f"Processed:{self.processed_list.count()}(Total {self.processed_num})")
+        self.processed_label = QLabel(
+            f"Processed:{self.processed_list.count()}(Total {self.processed_num})"
+        )
 
         # function button
         self.multi_tag_btn = QPushButton("Start")
@@ -311,26 +349,31 @@ class TagWindow(QWidget):
     def update_figure(self):
         # 在这个函数中，你可以更新你的图形
 
-        sizes = [self.yellow_cnt, self.blue_cnt, self.black_cnt, self.red_cnt]
+        sizes = [
+            self.yellow_cnt + 1,
+            self.blue_cnt + 1,
+            self.black_cnt + 1,
+            self.red_cnt + 1,
+        ]
         labels = ["Yellow", "Blue", "Black", "Red"]
 
         self.canvas.axes.clear()
         wedges, texts, autotexts = self.canvas.axes.pie(
-                sizes, labels=labels, autopct="%1.1f%%", startangle=90
+            sizes, labels=labels, autopct="%1.1f%%", startangle=90
         )
         self.canvas.axes.axis(
-                "equal"
+            "equal"
         )  # Equal aspect ratio ensures that pie is drawn as a circle.
 
         # add annotation
         # 添加每种颜色标签的具体数量
         legend_labels = [f"{label}: {size}" for label, size in zip(labels, sizes)]
         self.canvas.axes.legend(
-                wedges,
-                legend_labels,
-                title="Colors",
-                loc="center left",
-                bbox_to_anchor=(0.8, 0, 0.5, 1),
+            wedges,
+            legend_labels,
+            title="Colors",
+            loc="center left",
+            bbox_to_anchor=(0.8, 0, 0.5, 1),
         )
 
         self.canvas.draw()
@@ -341,7 +384,7 @@ class TagWindow(QWidget):
         tag_filename = self.tag_filename(filename, tag, index, channel)
         target_file_path = self.target_dir / tag_filename
         logger.info(
-                f"move image from {os.path.basename(self.filename_map[filename])} to {target_file_path.name}"
+            f"move image from {os.path.basename(self.filename_map[filename])} to {target_file_path.name}"
         )
         shutil.copy(self.filename_map[filename], target_file_path)
         json_file = "train.json" if random.random() > self.test_ratio else "test.json"
@@ -363,10 +406,10 @@ class TagWindow(QWidget):
         total = max(total, 1)
         channels = ["yellow", "blue", "black", "red"]
         ratios = [
-                self.yellow_cnt / total,
-                self.blue_cnt / total,
-                self.black_cnt / total,
-                self.red_cnt / total,
+            self.yellow_cnt / total,
+            self.blue_cnt / total,
+            self.black_cnt / total,
+            self.red_cnt / total,
         ]
         acc_ratios = [ratios[i - 1] + ratios[i] for i in range(1, 4)]
         channel = channels[-1]
@@ -377,24 +420,24 @@ class TagWindow(QWidget):
         assert channel is not None, "channel is None"
         # select item based on channel randomly
         yellow_items = [
-                self.unprocessed_list.item(i)
-                for i in range(self.unprocessed_list.count())
-                if self.unprocessed_list.item(i).text().startswith("yellow")
+            self.unprocessed_list.item(i)
+            for i in range(self.unprocessed_list.count())
+            if self.unprocessed_list.item(i).text().startswith("yellow")
         ]
         blue_items = [
-                self.unprocessed_list.item(i)
-                for i in range(self.unprocessed_list.count())
-                if self.unprocessed_list.item(i).text().startswith("blue")
+            self.unprocessed_list.item(i)
+            for i in range(self.unprocessed_list.count())
+            if self.unprocessed_list.item(i).text().startswith("blue")
         ]
         black_items = [
-                self.unprocessed_list.item(i)
-                for i in range(self.unprocessed_list.count())
-                if self.unprocessed_list.item(i).text().startswith("black")
+            self.unprocessed_list.item(i)
+            for i in range(self.unprocessed_list.count())
+            if self.unprocessed_list.item(i).text().startswith("black")
         ]
         red_items = [
-                self.unprocessed_list.item(i)
-                for i in range(self.unprocessed_list.count())
-                if self.unprocessed_list.item(i).text().startswith("red")
+            self.unprocessed_list.item(i)
+            for i in range(self.unprocessed_list.count())
+            if self.unprocessed_list.item(i).text().startswith("red")
         ]
         if channel == "yellow" and yellow_items:
             selected_item = random.choice(yellow_items)
@@ -420,7 +463,7 @@ class TagWindow(QWidget):
             return selected_item
         else:
             raise ValueError(
-                    f"unknown channel: {channel}, {len(yellow_items)}, {len(blue_items)}, {len(black_items)}, {len(red_items)}"
+                f"unknown channel: {channel}, {len(yellow_items)}, {len(blue_items)}, {len(black_items)}, {len(red_items)}"
             )
 
     def process_multi_tag(self):
@@ -448,15 +491,19 @@ class TagWindow(QWidget):
             self.unprocessed_list.setCurrentItem(self.unprocessed_list.item(0))
 
             if result == QDialog.Accepted:
-                self.unprocessed_label.setText(f"Unprocessed:{self.unprocessed_list.count()}")
+                self.unprocessed_label.setText(
+                    f"Unprocessed:{self.unprocessed_list.count()}"
+                )
                 tag = dialog.get_tag()
                 for color in tag:
                     if tag[color] == "":
                         continue
                     tag_filename = self.save_image(filename, tag[color], i, color)
                     self.processed_list.addItem(tag_filename)
-                self.processed_label.setText(f"Processed:{self.processed_list.count()}"
-                                             f"(Total{self.processed_list.count() + self.processed_num})")
+                self.processed_label.setText(
+                    f"Processed:{self.processed_list.count()}"
+                    f"(Total{self.processed_list.count() + self.processed_num})"
+                )
                 self.progress_bar.setValue(i)
                 self.update_figure()  # update the color ratio figure
                 # remove the file from the origin folder
@@ -464,7 +511,9 @@ class TagWindow(QWidget):
             elif result == QDialog.Rejected:
                 break
             elif result == 11:
-                self.unprocessed_label.setText(f"Unprocessed:{self.unprocessed_list.count()}")
+                self.unprocessed_label.setText(
+                    f"Unprocessed:{self.unprocessed_list.count()}"
+                )
                 self.progress_bar.setValue(i)
                 continue
             else:
@@ -498,6 +547,8 @@ dark_stylesheet = """
 def main(dataset_dir: str, output_dir: str, test_ratio: float, pred_host: str):
     app = QApplication([])
     app.setStyleSheet(dark_stylesheet)
-    window = TagWindow(pathlib.Path(dataset_dir), pathlib.Path(output_dir), test_ratio, pred_host)
+    window = TagWindow(
+        pathlib.Path(dataset_dir), pathlib.Path(output_dir), test_ratio, pred_host
+    )
     window.show()
     app.exec()

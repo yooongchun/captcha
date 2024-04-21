@@ -18,3 +18,4 @@ output/*
 inference/
 chrome-win*
 .venv
+splitted
