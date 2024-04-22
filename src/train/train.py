@@ -116,17 +116,15 @@ class Trainer:
 
     def _init_model(self):
         # 获取模型
-        logger.info("Use model {}".format(self.args.model))
-        m = model.Model(self.num_classes, self.args.max_len, feature_net=self.args.model)
-        img_size = self.test_dataset[0][0][0].shape
+        m = model.Model(self.num_classes, self.args.max_len)
+        img_size = self.test_dataset[0][0].shape
         label_size = self.test_dataset[0][1].shape
         inputs_shape = paddle.static.InputSpec([None, *img_size], dtype="float32", name="input")
-        color_shape = paddle.static.InputSpec([1], dtype="float32", name="color")
         labels_shape = paddle.static.InputSpec([None, *label_size], dtype="int64", name="label")
-        self.model = paddle.Model(m, (inputs_shape, color_shape), labels_shape)
+        self.model = paddle.Model(m, inputs_shape, labels_shape)
 
         # 打印模型和数据信息
-        self.model.summary(input_size=([self.args.batch_size, *img_size], [1]))
+        self.model.summary(input_size=(self.args.batch_size, *img_size))
 
         # 设置优化方法
         def make_optimizer(parameters=None):
@@ -170,9 +168,10 @@ class Trainer:
             PrintLastLROnEpochStart(),
         ]
         if self.args.wandb_mode in ["online", "offline"]:
-            name = f"{self.args.model}-bs{self.args.batch_size}"
+            name = f"bs{self.args.batch_size}"
             if self.args.wandb_name:
                 name = name + "-" + self.args.wandb_name
+            pathlib.Path(self.args.log_dir, "wandb").mkdir(parents=True, exist_ok=True)
             logger.info(f"Use wandb to record log, name: {name}, mode: {self.args.wandb_mode}")
             wandb_callback = paddle.callbacks.WandbCallback(
                 project="captcha",

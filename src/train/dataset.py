@@ -71,6 +71,9 @@ class CaptchaDataset(Dataset):
                 if not Path(meta["path"]).exists():
                     logger.warning(f"file {meta['path']} not exists!")
                     continue
+                if len(meta["text"]) > self.max_len:
+                    logger.warning(f"file {meta['path']} text too long {meta['text']}")
+                    continue
                 meta_info.append(meta)
             logger.info(f"load meta info from {json_file}, num {len(meta_info)}")
             return meta_info
@@ -81,12 +84,10 @@ class CaptchaDataset(Dataset):
 
         # 图片加载&转换
         img_arr = self.data_util.process_img(img)
-        # 颜色信息处理
-        color_index = self.data_util.process_channel(self.channel)
         # 标签处理
         label_arr = self.data_util.process_label(label_map["text"])
 
-        return (img_arr, color_index), label_arr
+        return img_arr, label_arr
 
     def __len__(self):
         return len(self.meta_info)

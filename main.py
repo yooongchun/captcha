@@ -52,7 +52,6 @@ def dw(key: str, save_dir: Path):
 @click.option("--channel", type=click.Choice(["text", "red", "blue", "black", "yellow"]), required=True, help="channel")
 @click.option("--data-type", type=click.Choice(["color", "single"]), required=True, help="data type")
 @click.option("--simple-mode", is_flag=True, help="simple mode")
-@click.option("--model", type=str, default="custom", help="which model to use?")
 @click.option("-b", "--batch-size", type=int, required=True, help="batch size")
 @click.option("-n", "--num-epoch", type=int, required=True, help="number of epoch")
 @click.option("--lr", type=float, default=0.001, help="learning rate")
@@ -73,7 +72,6 @@ def train(
     channel: str,
     data_type: str,
     simple_mode: bool,
-    model: str,
     batch_size: int,
     num_epoch: int,
     lr: float,
@@ -98,7 +96,6 @@ def train(
         max_len=max_len,
         channel=channel,
         simple_mode=simple_mode,
-        model=model,
         batch_size=batch_size,
         num_epoch=num_epoch,
         lr=lr,
