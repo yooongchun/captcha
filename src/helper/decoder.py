@@ -11,7 +11,7 @@ class Decoder:
         self.vocabulary = vocabulary
         self.blank_index = len(self.vocabulary)
 
-    def ctc_greedy_decoder(self, probs_seq: np.ndarray):
+    def ctc_greedy_decoder(self, probs_seq, keep_ci=False):
         """CTC贪婪（最佳路径）解码器。
         由最可能的令牌组成的路径被进一步后处理
         删除连续的重复和所有的空白。
@@ -27,7 +27,22 @@ class Decoder:
         # 删除空白索引
         index_list = [index for index in index_list if index != self.blank_index]
         # 将索引列表转换为字符串
-        return ''.join([self.vocabulary[index] for index in index_list])
+        label = ''.join([self.vocabulary[index] for index in index_list])
+        if keep_ci:
+            arr = [[]]
+            prev = max_index_list[0]
+            keys = [prev]
+            ci = [round(probs_seq[i, j].numpy().item(), 3) for i, j in enumerate(max_index_list)]
+            for k, v in zip(max_index_list, ci):
+                if k == prev:
+                    arr[-1].append(v)
+                else:
+                    prev = k
+                    keys.append(k)
+                    arr.append([v])
+            ci = [(self.vocabulary[k], np.mean(vli)) for k, vli in zip(keys, arr) if k != self.blank_index]
+            return label, ci
+        return label
 
     def label_to_text(self, label):
         """标签转文字"""

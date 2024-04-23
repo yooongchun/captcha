@@ -5,9 +5,7 @@
 """
 import argparse
 from pathlib import Path
-import pandas as pd
 
-import uvicorn
 import click
 
 from src import proj_path, vocabulary_path, dataset_path, assets_path
@@ -117,6 +115,7 @@ def train(
 @click.option("--port", default=8000, type=int, help="port")
 def app(host: str, port: int):
     """run the app"""
+    import uvicorn
     from src.app import app as m_app
 
     uvicorn.run(m_app.app, host=host, port=port)
@@ -129,6 +128,7 @@ def app(host: str, port: int):
 @click.option("-b", "--browser-path", help="chrome browser path")
 def download(save_dir: str, num: int, debug: bool, browser_path: str):
     """download captcha images"""
+    import pandas as pd
     from src.helper import download_captcha
 
     inv_data = pd.read_csv(str(assets_path / "inv_data.csv"), encoding="utf-8", dtype=str)
