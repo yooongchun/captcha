@@ -249,7 +249,7 @@ class CaptchaGenerator:
 
 
 def save_batch(results, output_dir: pathlib.Path, test_ratio=0.4, index=0):
-    train_file = output_dir / "train.json"
+    train_file = output_dir / "train(deprecated).json"
     test_file = output_dir / "test.json"
     image_dir = output_dir.absolute() / "images"
     os.makedirs(image_dir, exist_ok=True)

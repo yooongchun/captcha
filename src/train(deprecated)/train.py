@@ -8,7 +8,7 @@ import paddle
 import prettytable
 from loguru import logger
 
-from src.train import model, dataset, metric, loss
+from src.train_deprecated import model, dataset, metric, loss
 
 
 class PrintLastLROnEpochStart(paddle.callbacks.Callback):
@@ -19,7 +19,7 @@ class PrintLastLROnEpochStart(paddle.callbacks.Callback):
 def check_dataset(dataset_dir: str):
     """检查数据集是否存在"""
     logger.info(f"Check dataset {dataset_dir}...")
-    train_json = Path(dataset_dir, "train.json")
+    train_json = Path(dataset_dir, "train(deprecated).json")
     meta_info = []
     if train_json.is_file():
         with open(train_json, "rb") as fp:
@@ -72,7 +72,7 @@ class Trainer:
             self.train_dataset = dataset.CaptchaDataset(
                     dataset_dirs=self.args.dataset_dir,
                     vocabulary_path=self.args.vocabulary_path,
-                    mode="train",
+                    mode="train(deprecated)",
                     channel=self.args.channel,
                     max_len=self.args.max_len,
                     simple_mode=self.args.simple_mode,

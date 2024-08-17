@@ -77,7 +77,7 @@ def train(
     export: bool,
     evaluate: bool,
 ):
-    """train the model"""
+    """train(deprecated) the model"""
     from src.train import train as m_train
 
     args = argparse.Namespace(
@@ -141,16 +141,15 @@ def download(save_dir: str, num: int, debug: bool, browser_path: str):
 @cli.command()
 @click.option("--dataset-dir", type=str, default="origin")
 @click.option("--output-dir", type=str, default="labeled")
-@click.option("--test-ratio", type=float, default=0.1)
-@click.option("--pred-host", type=str, default="")
-def tag(dataset_dir, output_dir, test_ratio, pred_host):
+@click.option("--pred-url", type=str, default="")
+def tag(dataset_dir, output_dir, pred_url):
     """tag the dataset"""
     from src.helper import make_tag
 
     dataset_dir = dataset_path / dataset_dir
     save_dir = dataset_path / output_dir / "images"
     save_dir.mkdir(parents=True, exist_ok=True)
-    make_tag.main(dataset_dir, save_dir, test_ratio, pred_host)
+    make_tag.main(dataset_dir, save_dir, pred_url)
 
 
 @cli.command()

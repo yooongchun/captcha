@@ -37,7 +37,7 @@ class CaptchaDataset(Dataset):
         self.num_classes = len(self.data_util.get_vocabulary())
 
         assert channel in self.data_util.channels, f"channel only can be one of {self.data_util.channels}"
-        assert mode in ["train", "test"], "mode can only be train or test!"
+        assert mode in ["train(deprecated)", "test"], "mode can only be train(deprecated) or test!"
         assert data_type in [
             "single",
             "color",

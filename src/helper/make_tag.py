@@ -46,20 +46,22 @@ def get_predict_label(host: str, img_path: str, channel: str):
 
     st = time.time()
     res = requests.post(
-        f"{host}/api/v1/captcha/predict",
+        host,
         files={"file": open(img_path, "rb")},
-        data={"channel": channel},
+        params={"channel": channel},
     )
     ed = time.time()
     assert res.status_code == 200, f"request failed, status code: {res.status_code}"
     assert (
-        res.json()["code"] == 0
+            res.json()["code"] == 0
     ), f"request failed, error message: {res.json()['error']}"
 
-    pred_label = res.json()["data"]["predict_label"]
+    data = res.json()["data"]
+    pred_label = data["pred_label"]
+    pred_ci = data["pred_label"]
     logger.info(
         f"request time: {round(ed - st, 2)}s, filename: {os.path.basename(img_path)}, "
-        f"channel: {channel}, label: {pred_label}"
+        f"channel: {channel}, label: {pred_label}, pred_ci: {pred_ci}"
     )
     return pred_label
 
@@ -104,7 +106,8 @@ class TagDialog(QDialog):
             # label.setStyleSheet(f"color: {color}")
             label.setFont(QFont("Arial", 16))
             hbox.addWidget(label)
-            text_input = MyLineEdit()
+            # text_input = MyLineEdit()
+            text_input = QLineEdit()
             text_input.setFixedSize(120, 30)
             text_input.setFont(QFont("Arial", 16))
             text_input.setStyleSheet(f"color: {color}")
@@ -153,12 +156,7 @@ class TagDialog(QDialog):
         for color in self.inputs:
             pred_label = get_predict_label(self.pred_host, self.img_path, color)
             if pred_label:
-                QMetaObject.invokeMethod(
-                    self.inputs[color],
-                    "setText",
-                    Qt.QueuedConnection,
-                    Q_ARG(str, pred_label),
-                )
+                QMetaObject.invokeMethod(self.inputs[color], "setText", Qt.QueuedConnection, Q_ARG(str, pred_label), )
         logger.info(f"auto tag finished, filename: {os.path.basename(self.img_path)}")
 
     def keyPressEvent(self, event):
@@ -227,12 +225,11 @@ class RenameDialog(QDialog):
 
 class TagWindow(QWidget):
     def __init__(
-        self,
-        dataset_dir: pathlib.Path,
-        target_dir: pathlib.Path,
-        test_ratio: float = 0.4,
-        pred_host: str = "",
-        multi_tag: bool = False,
+            self,
+            dataset_dir: pathlib.Path,
+            target_dir: pathlib.Path,
+            pred_host: str = "",
+            multi_tag: bool = False,
     ):
         super().__init__()
 
@@ -244,7 +241,6 @@ class TagWindow(QWidget):
         self.multi_tag = multi_tag
         self.dataset_dir = dataset_dir
         self.target_dir = target_dir
-        self.test_ratio = test_ratio
 
         self.file_paths = glob(f"{self.dataset_dir}/*.png")
         random.shuffle(self.file_paths)
@@ -379,6 +375,8 @@ class TagWindow(QWidget):
         self.canvas.draw()
 
     def save_image(self, filename, tag, index, channel=None):
+        # 字母转为大写
+        tag = "".join(i.upper() if i.isalpha() and not "\u4e00" <= i <= "\u9fff" else i for i in tag)
         if channel is None:
             channel = filename.split("-")[0]
         tag_filename = self.tag_filename(filename, tag, index, channel)
@@ -387,7 +385,7 @@ class TagWindow(QWidget):
             f"move image from {os.path.basename(self.filename_map[filename])} to {target_file_path.name}"
         )
         shutil.copy(self.filename_map[filename], target_file_path)
-        json_file = "train.json" if random.random() > self.test_ratio else "test.json"
+        json_file = "data.json"
         json_file_path = self.target_dir.parent / json_file
         json_list = []
         if json_file_path.exists():
@@ -544,11 +542,9 @@ dark_stylesheet = """
 """
 
 
-def main(dataset_dir: str, output_dir: str, test_ratio: float, pred_host: str):
+def main(dataset_dir: str, output_dir: str, pred_host: str):
     app = QApplication([])
     app.setStyleSheet(dark_stylesheet)
-    window = TagWindow(
-        pathlib.Path(dataset_dir), pathlib.Path(output_dir), test_ratio, pred_host
-    )
+    window = TagWindow(pathlib.Path(dataset_dir), pathlib.Path(output_dir), pred_host)
     window.show()
     app.exec()
