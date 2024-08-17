@@ -1,10 +1,17 @@
-# 国税网验证码识别模型
+<a href="https://zoz.cool" >
+<img width="100" style="float:right" alt="zoz" src="https://yooongchun.github.io/picx-images-hosting/zoz-download.6t71kaqj6o.webp">
+</a>
 
-## 摘要
+# Captcha
 
-国税网发票查验验证码识别模型。
+![Static Badge](https://img.shields.io/badge/release-v1.0.0-blue?logo=github)
+![Static Badge](https://img.shields.io/badge/license-MIT-orange?logo=github)
 
-含中文3000+文字和0-9数字+26大写字母
+国税网发票查验验证码识别模型。含中文3000+文字和0-9数字+26大写字母。识别率约90%
+
+---
+
+# 如何使用 | How to use
 
 ## 数据生成
 
@@ -18,7 +25,7 @@ python3 main.py download
 python3 main.py download -b <your-browser-path>
 ```
 
-![Snipaste_2024-08-17_07-44-27](https://yooongchun.github.io/picx-images-hosting/Snipaste_2024-08-17_07-44-27.5j44di864z.webp)
+<img src="https://yooongchun.github.io/picx-images-hosting/Snipaste_2024-08-17_07-44-27.5j44di864z.webp" width="50%"  alt=""/>
 
 此时，程序就会自动开始下载验证码图片，默认会下载10000张之后停止，可以通过`-n`参数指定下载数量。
 
@@ -28,15 +35,16 @@ python3 main.py download -b <your-browser-path>
 ```bash
 python3 main.py tag
 ```
-
 具体使用参数不多介绍，这里着重说一下`--pred-url`参数，这个参数是用来指定预测模型的地址，这样可以在打标签的时候实时预测验证码，这样可以提高打标签的效率。
 比如你可以先打标签1000张，然后训练一个模型，然后用该模型提供预测服务，然后再打标签1000张，这样可以提高打标签的效率。
 如下图，主页一共三个区域；1是待打标签的图片，2是已经打标签的图片，3是统计的当前已打标签的数据分布，每次启动的时候会优先选择分类数少的来打标签。
-![zoz-2](https://yooongchun.github.io/picx-images-hosting/zoz-2.6bgzv9x4j8.webp)
+<img src="https://yooongchun.github.io/picx-images-hosting/zoz-2.6bgzv9x4j8.webp" width="50%" alt=""/>
 
 点击start开始打标签，如果你指定了`--pred-url`的参数，那么这里会自动实时预测验证码，如果预测错误，可以手动删除填写标签值，没有的颜色留空即可，点击`tag it`或者回车完成打标。自动进入下一张图片打标。
 如果发觉有错误需要修改上一张，则可以先点击`stop`停止当前打标，然后在主页面的右侧(2区域)找到你打标的图片双击修改标签即可。
-![zoz-3](https://yooongchun.github.io/picx-images-hosting/zoz-3.8ojmchaxq2.webp)![zoz-4](https://yooongchun.github.io/picx-images-hosting/zoz-4.1hs4z5qfqy.webp)
+
+<img src="https://yooongchun.github.io/picx-images-hosting/zoz-3.8ojmchaxq2.webp" width="30%" />
+<img src="https://yooongchun.github.io/picx-images-hosting/zoz-4.1hs4z5qfqy.webp" width="47%" />
 
 对于有些比较复杂的图片想要跳过，直接点击`skip`即可。
 
@@ -71,13 +79,16 @@ python3 main.py up
 python3 main.py dw
 ```
 打完标之后直接上传，会自动根据远程版本推断最新版本，并自动压缩本地文件上传。下载的时候也会自动下载最新版本，当然也可以指定下载路径，不过需要注意的是，下载的时候会自动覆盖本地文件，需要注意本地的是否都已经保存上传。
-![zoz-5](https://yooongchun.github.io/picx-images-hosting/zoz-5.2domemqbgf.webp)    ![zoz-6](https://yooongchun.github.io/picx-images-hosting/zoz-6.6m3toggk92.webp)
+
+<img width="48%" src="https://yooongchun.github.io/picx-images-hosting/zoz-5.2domemqbgf.webp" />   
+<img width="48%" src="https://yooongchun.github.io/picx-images-hosting/zoz-6.6m3toggk92.webp" />
 
 ## 数据分布
 数据的分布对效果影响较大，通过以下命令可以查看一下当前的数据分布，还可以看到当前哪些字没有样本，针对词频较低的字要增加样本。
 ```bash
 python3 src/helper/viewer.py 
 ```
-![zoz-7](https://yooongchun.github.io/picx-images-hosting/zoz-7.1ovcuxc85x.webp)
+<img width="50%" src="https://yooongchun.github.io/picx-images-hosting/zoz-7.1ovcuxc85x.webp" alt="zoz-7" />
 
 ## 训练模型
+> todo
