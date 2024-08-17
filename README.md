@@ -1,5 +1,5 @@
 <a href="https://zoz.cool" >
-<img width="100" align:right alt="zoz" src="https://yooongchun.github.io/picx-images-hosting/zoz-download.6t71kaqj6o.webp">
+<img width="100" align="right" alt="zoz" src="https://yooongchun.github.io/picx-images-hosting/zoz-download.6t71kaqj6o.webp">
 </a>
 
 # Captcha
@@ -38,6 +38,7 @@ python3 main.py tag
 具体使用参数不多介绍，这里着重说一下`--pred-url`参数，这个参数是用来指定预测模型的地址，这样可以在打标签的时候实时预测验证码，这样可以提高打标签的效率。
 比如你可以先打标签1000张，然后训练一个模型，然后用该模型提供预测服务，然后再打标签1000张，这样可以提高打标签的效率。
 如下图，主页一共三个区域；1是待打标签的图片，2是已经打标签的图片，3是统计的当前已打标签的数据分布，每次启动的时候会优先选择分类数少的来打标签。
+
 <img src="https://yooongchun.github.io/picx-images-hosting/zoz-2.6bgzv9x4j8.webp" width="50%" alt=""/>
 
 点击start开始打标签，如果你指定了`--pred-url`的参数，那么这里会自动实时预测验证码，如果预测错误，可以手动删除填写标签值，没有的颜色留空即可，点击`tag it`或者回车完成打标。自动进入下一张图片打标。
