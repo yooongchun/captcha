@@ -1,5 +1,5 @@
 <a href="https://zoz.cool" >
-<img align="right" src="https://yooongchun.github.io/picx-images-hosting/zoz-logo-z.3k7xnqyp4n.webp" alt="zoz-logo-z" />
+<img align="right" width=130 src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z" />
 </a>
 
 # Captcha
