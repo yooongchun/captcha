@@ -1,5 +1,5 @@
 <a href="https://zoz.cool" >
-<img width="100" style="float:right" alt="zoz" src="https://yooongchun.github.io/picx-images-hosting/zoz-download.6t71kaqj6o.webp">
+<img width="100" align:right alt="zoz" src="https://yooongchun.github.io/picx-images-hosting/zoz-download.6t71kaqj6o.webp">
 </a>
 
 # Captcha
