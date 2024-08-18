@@ -1,15 +1,12 @@
 <p align="center">
-<a href="https://zoz.cool" ><img width=100 align="center" src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z" ></a>
+<a href="https://zoz.cool" ><img width=100 src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z"></a>
 </p>
-
 <h1 align="center">Captcha - 验证码识别</h1>
-
-<p aligin="center">
-    <a href=""><img src="https://img.shields.io/badge/release-v1.0.0-blue?logo=github" ></a>
-    <a href=""><img src="https://img.shields.io/badge/license-MIT-orange?logo=github" ></a>
-</p>
-
 <p align="center">国税网发票查验验证码识别模型。含中文3000+文字和0-9数字+26大写字母。识别率约90%</p>
+<p aligin="center">
+    <a href=""><img src="https://img.shields.io/badge/release-v1.0.0-blue?logo=github" alt="release"></a>
+    <a href=""><img src="https://img.shields.io/badge/license-MIT-orange?logo=github" alt="license"></a>
+</p>
 
 ---
 
