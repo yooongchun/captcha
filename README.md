@@ -1,5 +1,5 @@
 <h1 align="center">
-<img width=50 align="center" src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z" />    
+<img width=30 align="center" src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z" />    
     Captcha</h1>
 
 # Captcha
