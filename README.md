@@ -1,6 +1,5 @@
-<h1 align="center">
-<img width=30 align="center" src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z" />    
-    Captcha</h1>
+<a href="https://zoz.cool"><img width=100 align="center" src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z" /></a>
+<h1 align="center">Captcha - 验证码识别</h1>
 
 # Captcha
 
