@@ -1,7 +1,7 @@
+<h1 align="center">
 <a href="https://zoz.cool" >
-<img align="right" width=130 src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z" />
-</a>
-
+<img width=100 src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z" />
+Captcha</a></h1>
 # Captcha
 
 ![Static Badge](https://img.shields.io/badge/release-v1.0.0-blue?logo=github)
