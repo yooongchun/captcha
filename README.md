@@ -1,6 +1,6 @@
 <h1 align="center">
 <a href="https://zoz.cool" >
-<img width=100 src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z" />
+<img width=50 src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z" />
 Captcha</a></h1>
 # Captcha
 
