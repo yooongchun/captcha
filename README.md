@@ -1,26 +1,10 @@
-<p align="center">
-<a href="https://zoz.cool" align="center" ><img width=100 src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z" /></a>
+<a href="https://zoz.cool" align="center" ><img width=100 src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z" ></a>
 <h1 align="center">Captcha - 验证码识别</h1>
-</p>
 
 <p aligin="center">
     <a href=""><img src="https://img.shields.io/badge/release-v1.0.0-blue?logo=github" ></a>
     <a href=""><img src="https://img.shields.io/badge/license-MIT-orange?logo=github" ></a>
-国税网发票查验验证码识别模型。含中文3000+文字和0-9数字+26大写字母。识别率约90%
-</p>
-
-<h1 align="center">XCGUI</h1>
-<p align="center">
-    <a href="https://github.com/twgh/xcgui/releases"><img src="https://img.shields.io/badge/release-1.3.392-blue" alt="release"></a>
-    <a href="http://www.xcgui.com"><img src="https://img.shields.io/badge/XCGUI-3.3.9-blue" alt="XCGUI"></a>
-   <a href="https://golang.org"> <img src="https://img.shields.io/badge/golang-≥1.16-blue" alt="golang"></a>
-    <a href="https://pkg.go.dev/github.com/twgh/xcgui"><img src="https://img.shields.io/badge/go.dev-reference-brightgreen" alt="GoDoc"></a>
-    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-brightgreen" alt="License"></a>
-    <br><br>
-    <a href="https://github.com/twgh/xcgui-example">程序示例</a>&nbsp;&nbsp;
-    <a href="http://www.xcgui.com/doc-ui/">官方文档</a>&nbsp;&nbsp;
-	<a href="https://pkg.go.dev/github.com/twgh/xcgui">项目文档</a>&nbsp;&nbsp;
-	<a href="http://mall.xcgui.com">官方资源</a>
+<span>国税网发票查验验证码识别模型。含中文3000+文字和0-9数字+26大写字母。识别率约90%</span>
 </p>
 
 ---
