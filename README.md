@@ -7,8 +7,8 @@
     <a href=""><img src="https://img.shields.io/badge/license-MIT-orange?logo=github" alt="license"></a>
 <p align="center">国税网发票查验验证码识别模型。含中文3000+文字和0-9数字+26大写字母。识别率约90%</p>
 </p>
----
 
+---
 
 
 # 如何使用 | How to use
