@@ -1,15 +1,14 @@
-<h1 align="center">
+<p align="center">
 <a href="https://zoz.cool" ><img width=100 align="center" src="https://yooongchun.github.io/picx-images-hosting/zoz-logo.9gwhuriu9p.svg" alt="zoz-logo-z" ></a>
-Captcha - 验证码识别
-</h1>
+</p>
+
+<h1 align="center">Captcha - 验证码识别</h1>
 
 <p aligin="center">
     <a href=""><img src="https://img.shields.io/badge/release-v1.0.0-blue?logo=github" ></a>
     <a href=""><img src="https://img.shields.io/badge/license-MIT-orange?logo=github" ></a>
-<br/>
-国税网发票查验验证码识别模型。含中文3000+文字和0-9数字+26大写字母。识别率约90%
 </p>
-
+<p align="center">国税网发票查验验证码识别模型。含中文3000+文字和0-9数字+26大写字母。识别率约90%</p>
 ---
 
 # 如何使用 | How to use
